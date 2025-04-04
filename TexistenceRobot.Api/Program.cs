@@ -48,7 +48,12 @@ app.MapMqtt("/mqtt"); // this is why we added MQTTnet.AspNetCore
 // configure min API endpoints
 // TODO: use extensions to make cleaner
 app.MapPost("/robots/{id}/commands", async (Command command, ICommandService service) 
-    => await service.EnqueueCommand(command)); 
+    => await service.EnqueueCommand(command))
+    .WithMetadata("Send a movement command to the robot")
+    .WithDescription("Example: { \"command\":\"rotate\", \"params\":{\"degrees\":90} }")
+    .Produces(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status400BadRequest); 
+
 // TODO: add more options for auth on endpoints 
 app.MapGet("/robots/{id}/status", (string id, IStatusService service)
     => service.GetStatus(id));
